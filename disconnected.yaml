@@ -1,0 +1,10 @@
+---
+- hosts: bastion
+  roles:
+  - packages
+  - docker
+# - httpd
+
+- hosts: OSEv3
+  roles:
+  - openshift_prepare

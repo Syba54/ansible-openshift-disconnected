@@ -1,0 +1,37 @@
+---
+- name: start docker
+  service: name=docker state=started enabled=true
+
+- name: pull images
+  docker_image:
+    name: "{{ item }}"
+  with_items:
+  - "{{ base_images }}"
+  - "{{ component_images }}"
+  - "{{ s2i_images }}"
+
+- name: create images export directory
+  file:
+    path: "{{ docker_repos_dir }}"
+    state: directory
+    mode: 0777
+
+
+- name: save docker images
+  command: "docker save -o {{ docker_repos_dir }}/{{ item }}.tar {{ vars[item] | join(' ') }}"
+  args:
+    creates: "{{ docker_repos_dir }}/{{ item }}.tar"
+  with_items:
+  - base_images
+  - component_images
+  - s2i_images
+
+- name: allow everyone to download images
+  file: 
+    path: "{{ docker_repos_dir }}/{{ item }}.tar"
+    mode: 0644
+  with_items:
+  - base_images
+  - component_images
+  - s2i_images
+

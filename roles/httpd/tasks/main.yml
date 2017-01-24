@@ -1,0 +1,37 @@
+---
+- name: Install httpd rpm
+  package:
+    name: httpd
+    state: present
+
+- name: chmod a+r /var/www/html
+  file:
+    path: /var/www/html
+    recurse: true
+    mode: "a+rX"
+
+- name: restoreconf /var/www/html
+  command: "restorecon -vR /var/www/html"
+
+#- name: Allow http firewall rule
+#  command: "{{ item }}"
+#  with_items:
+#  - "firewall-cmd             --add-service=http"
+#  - "firewall-cmd --permanent --add-service=http"
+
+- name: Allow http firewall rule
+  iptables:
+    chain: INPUT
+    destination_port: 80
+    protocol: tcp
+    match: tcp
+    jump: ACCEPT
+
+- name: Save firewall rules
+  raw: "iptables-save >/etc/sysconfig/iptables"
+
+- name: Enable service httpd
+  service:
+    name: httpd
+    state: started
+    enabled: true

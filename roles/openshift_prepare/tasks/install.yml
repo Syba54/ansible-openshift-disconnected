@@ -1,0 +1,27 @@
+---
+- name: Install Yum repos
+  copy:
+    content: |
+      [{{ item }}]
+      name={{ item }}
+      baseurl=http://{{ hostvars[groups['bastion'][0]].ansible_host }}/{{ rpm_repos }}/{{ item }}
+      enabled=1
+      gpgcheck=0
+    dest: /etc/yum.repos.d/{{ item }}.repo
+  with_items:
+  - rhel-7-server-rpms
+  - rhel-7-server-extras-rpms
+  - rhel-7-server-ose-3.4-rpms
+  when: ansible_pkg_mgr == "yum"
+
+- name: install docker
+  package:
+    name: docker
+    state: present
+  when: ansible_pkg_mgr != "unknown"   #detect Atomic Host
+
+- name: start docker
+  service:
+    name: docker
+    state: started
+    enabled: true

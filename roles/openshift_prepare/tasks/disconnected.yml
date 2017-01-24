@@ -1,0 +1,34 @@
+---
+#- raw: "docker images |grep registry.access.redhat.com/openshift3/ose |grep {{ ocp_tag }}"
+#  register: result
+#  ignore_errors: True
+
+#- name: copy images
+#  copy:
+#    src: "{{ docker_repos_dir }}/{{ item }}.tar"
+#    dest: "/var/tmp/{{ item }}.tar"
+#  with_items:
+#  - base_images
+#  - component_images
+#  - s2i_images
+#  when: result|failed
+  
+
+- name: import images
+  raw: "curl -sSL http://{{ hostvars[groups['bastion'][0]].ansible_host }}/{{ docker_repos }}/{{ item }}.tar |docker load"
+  with_items:
+  - base_images
+  - component_images
+  - s2i_images
+  when: containerized
+#  when: ansible_pkg_mgr == "unknown"
+#  when: result|failed
+
+#- name: cleanup temp files
+#  file:
+#    path: "/var/tmp/{{ item }}.tar"
+#    state: absent
+#  with_items:
+#  - base_images
+#  - component_images
+#  - s2i_images
