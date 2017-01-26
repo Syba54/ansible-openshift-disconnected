@@ -1,0 +1,3 @@
+---
+- name: Create admin ServiceAccount
+  command: /usr/local/bin/oc adm add-cluster-role-to-user cluster-admin system:serviceaccount:management-infra:management-admin

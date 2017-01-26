@@ -15,7 +15,7 @@
   
 
 - name: import images
-  raw: "curl -sSL http://{{ hostvars[groups['bastion'][0]].ansible_host }}/{{ docker_repos }}/{{ item }}.tar |docker load"
+  raw: "curl -sSL http://{{ groups['bastion'][0] }}/{{ docker_repos }}/{{ item }}.tar |docker load"
   with_items:
   - base_images
   - component_images

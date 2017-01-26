@@ -4,7 +4,7 @@
     content: |
       [{{ item }}]
       name={{ item }}
-      baseurl=http://{{ hostvars[groups['bastion'][0]].ansible_host }}/{{ rpm_repos }}/{{ item }}
+      baseurl=http://{{ groups['bastion'][0] }}/{{ rpm_repos }}/{{ item }}
       enabled=1
       gpgcheck=0
     dest: /etc/yum.repos.d/{{ item }}.repo
@@ -12,7 +12,7 @@
   - rhel-7-server-rpms
   - rhel-7-server-extras-rpms
   - rhel-7-server-ose-3.4-rpms
-  when: ansible_pkg_mgr == "yum"
+  when: ansible_pkg_mgr == "yum"   #detect Atomic Host
 
 - name: install docker
   package:

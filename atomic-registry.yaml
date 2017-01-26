@@ -1,0 +1,5 @@
+---
+- hosts: shared
+  roles:
+  - packages
+

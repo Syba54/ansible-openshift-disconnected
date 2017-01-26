@@ -1,10 +1,40 @@
 ---
-- hosts: bastion
+- name: Setup Shared Services
+  hosts: shared
+  roles:
+  - atomic_registry
+
+- name: Prepare Bastion
+  hosts: bastion
   roles:
   - packages
   - docker
 # - httpd
 
-- hosts: OSEv3
+- name: Pre Install steps
+  hosts: OSEv3
   roles:
   - openshift_prepare
+
+- name: Install OS
+  include: ../git/openshift-ansible/playbooks/byo/config.yml
+
+
+- name: OpenShift Post Install steps
+  hosts: oo_first_master
+  roles:
+  - role: openshift_postinstall
+
+- name: Post Install steps
+  hosts: nfs
+  roles:
+  - role: ../git/openshift-ansible/roles/kube_nfs_volumes
+    openshift:
+      common:
+        is_containerized: False
+    disks: "/dev/vdb"
+    sizes: 1G:5,2G:5,5G:1
+    force: no
+    validate_certs: False
+    kubernetes_url: "{{ openshift_master_api_url }}"
+    kubernetes_token: tJdce6Fn3cL1112YoIJ5m2exzAbzcPZX

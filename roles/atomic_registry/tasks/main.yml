@@ -1,0 +1,22 @@
+---
+- name: "run atomic-registry install"
+  command: "atomic install projectatomic/atomic-registry-install {{ ansible_nodename }}"
+  args:
+    creates: /etc/sysconfig/atomic-registry-master
+
+- name: "start atomic-registry service"
+  service: 
+    name: atomic-registry-master
+    state: started
+    enabled: true
+
+- name: "check if setup was run"
+  command: "bash -c 'docker exec atomic-registry-master oc get svc | grep docker-registry'"
+  register: setup_result
+  ignore_errors: yes
+
+- name: "run setup if not setup"
+  command: "/var/run/setup-atomic-registry.sh {{ ansible_nodename }}"
+  when: setup_result|failed
+
+
