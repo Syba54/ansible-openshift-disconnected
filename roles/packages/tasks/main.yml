@@ -1,16 +1,34 @@
 ---
+- name: Register System with Red Hat Subscription
+  redhat_subscription:
+    state: present
+    username: "{{ subscription.username }}"
+    password: "{{ subscription.password }}"
+    pool: '.*OpenShift.*'
+
+- name: Enable RHEL Repositories
+  redhat_repositories:
+    state: enabled
+    id: "{{ repos.rhel }}"
+
+
 - name: install packages
-  yum: name=yum-utils,createrepo,docker,git state=installed
+  yum:
+    name:
+    - yum-utils
+    - createrepo
+    - docker
+    - git 
+    state: installed
 
 - name: repo directory
-  file: path="{{ rpm_repos_dir }}" state=directory mode=0777
+  file: 
+    path: "{{ rpm_repos_dir }}"
+    state: directory
+    mode: 0777
 
 - name: clone repos
   shell: reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ rpm_repos_dir }}; createrepo -v {{ rpm_repos_dir }}/{{ item }} -o {{ rpm_repos_dir }}/{{ item }}
   args:
     creates: "{{ rpm_repos_dir }}/{{ item }}"
-  with_items:
-  - rhel-7-server-rpms
-  - rhel-7-server-extras-rpms
-  - rhel-7-server-ose-3.4-rpms
-
+  with_items: "{{ repos.rhel }}"

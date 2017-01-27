@@ -1,7 +1,11 @@
 ---
+subscription:
+  username: bla
+  password: bla
 docker_repos_dir: /var/www/html/docker-repo
 docker_repos: docker-repo
 rpm_repos_dir: /var/www/html/rpm-repo
 rpm_repos: rpm-repo
+ocp_version: 3.4
 ocp_tag: v3.4
 

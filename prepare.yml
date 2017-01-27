@@ -1,0 +1,13 @@
+---
+- name: Setup Shared Services
+  hosts: shared
+  roles:
+  - atomic_registry
+
+- name: Setup Bastion
+  hosts: bastion
+  roles:
+  - packages
+  - docker
+# - httpd
+
