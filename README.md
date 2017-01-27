@@ -4,15 +4,22 @@ Ansible Playbook to create a Proxy-node as preparation for a disconnected instal
 # Summary
 
 ## Network Layout
+<pre>
    Internet Access --> Bastion Host --> Proxy Host        --> OpenShift Nodes
                        * SSH            * Docker-registry
                        * Ansible        * RPM-registry    --> RHEL OS
                                         * RH SSO IdM      --> Identity Provider (SSO)
                                         * NFS Storage     --> PVs
+</pre>
 
+# Prerequisites
+Bastion host:
+* at least 40GB storage in /var/tmp to temporarely store RPM-packages & Docker-Images.
+* at least 20GB storage in vg-docker (LVM) to temporarely store Docker-Images.
 
 # Prepare
 Set your environment properties in `group_vars/all`.
+Set your hosts in `hosts`.
 
 # Proxy Host
 Hosting Docker-images (docker-registry) & RPM-Packages (httpd).
