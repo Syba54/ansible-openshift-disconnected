@@ -1,0 +1,6 @@
+---
+- name: Setup Shared Services
+  hosts: shared
+  roles:
+  - rh_sso
+

@@ -1,0 +1,14 @@
+[Unit]
+Description=PostgreSQL database for Red Hat SSO
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/docker start -a TEMPLATE-db
+ExecStop=/usr/bin/docker stop TEMPLATE-db
+SyslogIdentifier=TEMPLATE-db
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

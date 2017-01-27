@@ -1,8 +1,8 @@
 ---
-- name: Prepare
+- name: Setup external Prerequisites
   include: prepare.yml
 
-- name: Pre Install steps
+- name: Prepare OpenShift nodes
   hosts: OSEv3
   roles:
   - openshift_prepare
@@ -10,22 +10,6 @@
 - name: Install OS
   include: ../git/openshift-ansible/playbooks/byo/config.yml
 
+- name: Post-Install steps
+  include: post_install.yml
 
-- name: OpenShift Post Install steps
-  hosts: oo_first_master
-  roles:
-  - role: openshift_postinstall
-
-- name: Post Install steps
-  hosts: nfs
-  roles:
-  - role: ../git/openshift-ansible/roles/kube_nfs_volumes
-    openshift:
-      common:
-        is_containerized: False
-    disks: "/dev/vdb"
-    sizes: 1G:5,2G:5,5G:1
-    force: no
-    validate_certs: False
-    kubernetes_url: "{{ openshift_master_api_url }}"
-    kubernetes_token: tJdce6Fn3cL1112YoIJ5m2exzAbzcPZX

@@ -1,0 +1,15 @@
+[Unit]
+Description=Red Hat SSO
+After=TEMPLATE-db.service
+BindTo=TEMPLATE-db.service
+Requires=docker.service TEMPLATE-db.service
+
+[Service]
+ExecStart=/usr/bin/docker start -a TEMPLATE
+ExecStop=/usr/bin/docker stop TEMPLATE
+SyslogIdentifier=TEMPLATE
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

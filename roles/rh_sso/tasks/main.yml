@@ -1,0 +1,30 @@
+---
+- name: Create persistent volume for RH SSO Postgres database
+  file:
+    state: directory
+    path: "{{ postgresql.datadir}}/data"
+    mode: 0777
+
+- name: Prepare RH SSO image to include INSTALLER
+  copy:
+    src: files/docker-image
+    dest: /var/tmp
+
+- name: Build RH SSO image to include INSTALLER
+  docker_image:
+    force: yes
+    path: /var/tmp/docker-image
+    name: "{{ docker_image }}"
+    tag: latest
+    
+- name: "Install RH SSO service"
+  command: "atomic install --name=rhsso {{ docker_image }}                  \
+                           DATADIR='{{ postgresql.datadir }}'               \
+                           POSTGRESQL_PASSWORD='{{ postgresql.password }}'  \
+                           SSO_ADMIN_PASSWORD='{{ rhsso.password }}'        \
+                           APP_POSTGRESQL_SERVICE_HOST='{{ ansible_fqdn }}' \
+                           RHSSO_MEMORY='{{ rhsso.memory }}'                \
+                           POSTGRESQL_MEMORY='{{ postgresql.memory }}'      "
+  args:
+    creates: /etc/systemd/system/rhsso.service
+

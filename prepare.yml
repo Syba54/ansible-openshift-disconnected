@@ -3,6 +3,7 @@
   hosts: shared
   roles:
   - atomic_registry
+  - rh_sso
 
 - name: Setup Bastion
   hosts: bastion

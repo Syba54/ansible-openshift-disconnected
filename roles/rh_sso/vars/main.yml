@@ -1,0 +1,9 @@
+---
+docker_image: registry.access.redhat.com/redhat-sso-7/sso70-openshift
+postgresql:
+  datadir: /var/lib/rhsso
+  password: blabla
+  memory: 2g
+rhsso:
+  password: blabla
+  memory: 2g
