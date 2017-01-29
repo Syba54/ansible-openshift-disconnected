@@ -1,16 +1,17 @@
 ---
-- name: Register System with Red Hat Subscription
+- name: Register System with Red Hat
   redhat_subscription:
     state: present
     username: "{{ subscription.username }}"
     password: "{{ subscription.password }}"
     pool: '.*OpenShift.*'
+  when: subscription.username | bool
 
 - name: Enable RHEL Repositories
   redhat_repositories:
     state: enabled
     id: "{{ repos.rhel }}"
-
+  when: ansible_distribution == "RedHat"
 
 - name: install packages
   yum:

@@ -1,10 +1,48 @@
 ---
+- name: add our 'shared' docker-registry to 'bastion'
+  lineinfile:
+    name: /etc/sysconfig/docker
+    regexp: "^INSECURE_REGISTRY.*{{ groups['shared'][0] }}"
+    line: "INSECURE_REGISTRY='--insecure-registry {{ groups['shared'][0] }}:5000'"
+  register: insecure
+
 - name: start docker
-  service: name=docker state=started enabled=true
+  service: 
+    name: docker
+    state: "{{ 'restarted' if insecure.changed else 'started' }}" 
+    enabled: true
+
+- name: Get OAuth login token for docker-registry
+  uri:
+    url: "https://{{ groups['shared'][0] }}:8443/oauth/authorize?response_type=token&client_id=openshift-challenging-client"
+    user: admin
+    password: anything
+    validate_certs: no
+#    follow_redirects: no
+    return_content: yes
+    force_basic_auth: yes
+  register: authorize
+
+#- name: Get OAuth login token for docker-registry
+#  raw: "curl -sk 'https://{{ groups['shared'][0] }}:8443/oauth/authorize?response_type=token&client_id=openshift-challenging-client' --user admin:.  -I  | grep -oP 'access_token=[^&]*'"
+#  register: authorize
+
+- debug: var=authorize
+- set_fact:
+    oauth_token: "{{ authorize.url | regex_replace('.*access_token=([^&]*).*', '\\1') }}"
+- debug: var=oauth_token
+
+- name: Log into our 'shared' docker-registry
+  docker_login:
+    registry: "{{ groups['shared'][0] }}:5000"
+    username: admin
+    password: "{{ oauth_token }}"
 
 - name: pull images
   docker_image:
     name: "{{ item }}"
+    repository: "{{ item | regex_replace('^[^/]*', groups['shared'][0] + ':5000') }}"
+    push: yes
   with_items:
   - "{{ base_images }}"
   - "{{ component_images }}"

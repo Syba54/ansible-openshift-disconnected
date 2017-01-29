@@ -19,4 +19,8 @@
   command: "/var/run/setup-atomic-registry.sh {{ ansible_nodename }}"
   when: setup_result|failed
 
+- name: "create admin account"
+  raw: "docker exec atomic-registry-master oc adm policy add-cluster-role-to-user cluster-admin admin"
 
+- name: "create openshift3 repository"
+  raw: "docker exec atomic-registry-master oc adm new-project openshift3"
