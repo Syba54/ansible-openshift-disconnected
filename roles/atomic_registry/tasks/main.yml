@@ -1,4 +1,10 @@
 ---
+- name: "Install atomic command"
+  yum: 
+    name: atomic
+    state: installed
+  when: ansible_distribution == "RedHat"
+
 - name: "run atomic-registry install"
   command: "atomic install projectatomic/atomic-registry-install {{ ansible_nodename }}"
   args:

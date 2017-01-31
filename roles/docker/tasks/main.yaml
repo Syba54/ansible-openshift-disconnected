@@ -38,11 +38,31 @@
     username: admin
     password: "{{ oauth_token }}"
 
+- stat:
+    path: "{{ docker_repos_dir }}/{{ item }}.tar"
+  register: tarbal[item]
+  with_items:
+  - base_images
+  - component_images
+  - s2i_images
+
+- name: load images from tarbal
+  docker_image:
+    name: "{{ item }}"
+    repository: "{{ item | regex_replace('^[^/]*', groups['shared'][0] + ':5000') }}"
+    push: yes
+  when: tarbal[item].stat.exists
+  with_items:
+  - "{{ base_images }}"
+  - "{{ component_images }}"
+  - "{{ s2i_images }}"
+
 - name: pull images
   docker_image:
     name: "{{ item }}"
     repository: "{{ item | regex_replace('^[^/]*', groups['shared'][0] + ':5000') }}"
     push: yes
+  when: not tarbal[item].stat.exists
   with_items:
   - "{{ base_images }}"
   - "{{ component_images }}"
@@ -53,7 +73,6 @@
     path: "{{ docker_repos_dir }}"
     state: directory
     mode: 0777
-
 
 - name: save docker images
   command: "docker save -o {{ docker_repos_dir }}/{{ item }}.tar {{ vars[item] | join(' ') }}"
