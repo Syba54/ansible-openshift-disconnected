@@ -1,69 +1,76 @@
 ---
+registry_images:
+- { "name": "docker.io/projectatomic/atomic-registry-install", "tag": "latest"}
+- { "name": "docker.io/openshift/origin-docker-registry", "tag": "latest"}
+- { "name": "docker.io/openshift/origin", "tag": "latest"}
+- { "name": "docker.io/cockpit/kubernetes", "tag": "latest"}
+
 base_images:
-- "registry.access.redhat.com/openshift3/ose:v3.4"
-- "registry.access.redhat.com/openshift3/ose-haproxy-router:v3.4"
-- "registry.access.redhat.com/openshift3/ose-deployer:v3.4"
-- "registry.access.redhat.com/openshift3/ose-sti-builder:v3.4"
-- "registry.access.redhat.com/openshift3/ose-docker-builder:v3.4"
-- "registry.access.redhat.com/openshift3/ose-pod:v3.4"
-- "registry.access.redhat.com/openshift3/ose-docker-registry:v3.4"
+- { "name": "registry.access.redhat.com/openshift3/ose", "tag": "v3.3"}
+- { "name": "registry.access.redhat.com/openshift3/ose-haproxy-router", "tag": "v3.3"}
+- { "name": "registry.access.redhat.com/openshift3/ose-deployer", "tag": "v3.3"}
+- { "name": "registry.access.redhat.com/openshift3/ose-sti-builder", "tag": "v3.3"}
+- { "name": "registry.access.redhat.com/openshift3/ose-docker-builder", "tag": "v3.3"}
+- { "name": "registry.access.redhat.com/openshift3/ose-pod", "tag": "v3.3"}
+- { "name": "registry.access.redhat.com/openshift3/ose-docker-registry", "tag": "v3.3"}
 
 component_images:
-- "registry.access.redhat.com/openshift3/logging-deployer:v3.4"
-- "registry.access.redhat.com/openshift3/logging-elasticsearch:v3.4"
-- "registry.access.redhat.com/openshift3/logging-kibana:v3.4"
-- "registry.access.redhat.com/openshift3/logging-fluentd:v3.4"
-- "registry.access.redhat.com/openshift3/logging-auth-proxy:v3.4"
-- "registry.access.redhat.com/openshift3/metrics-deployer:v3.4"
-- "registry.access.redhat.com/openshift3/metrics-hawkular-metrics:v3.4"
-- "registry.access.redhat.com/openshift3/metrics-cassandra:v3.4"
-- "registry.access.redhat.com/openshift3/metrics-heapster:v3.4"
+- { "name": "registry.access.redhat.com/openshift3/logging-deployer", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/logging-elasticsearch", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/logging-kibana", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/logging-fluentd", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/logging-curator", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/logging-auth-proxy", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/metrics-deployer", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/metrics-hawkular-metrics", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/metrics-cassandra", "tag": "3.3.1"}
+- { "name": "registry.access.redhat.com/openshift3/metrics-heapster", "tag": "3.3.1"}
 
 s2i_images:
-- "registry.access.redhat.com/cloudforms/cfme-openshift-app:latest"
-- "registry.access.redhat.com/cloudforms/cfme-openshift-memcached:latest"
-- "registry.access.redhat.com/cloudforms/cfme-openshift-postgresql:latest"
-- "registry.access.redhat.com/dotnet/dotnetcore-11-rhel7:1.1"
-- "registry.access.redhat.com/dotnet/dotnetcore-10-rhel7:1.0"
-- "registry.access.redhat.com/openshift3/ruby-20-rhel7:latest"
-- "registry.access.redhat.com/rhscl/ruby-22-rhel7:latest"
-- "registry.access.redhat.com/rhscl/ruby-23-rhel7:latest"
-- "registry.access.redhat.com/openshift3/nodejs-010-rhel7:latest"
-- "registry.access.redhat.com/rhscl/nodejs-4-rhel7:latest"
-- "registry.access.redhat.com/openshift3/perl-516-rhel7:latest"
-- "registry.access.redhat.com/rhscl/perl-520-rhel7:latest"
-- "registry.access.redhat.com/rhscl/perl-524-rhel7:latest"
-- "registry.access.redhat.com/openshift3/php-55-rhel7:latest"
-- "registry.access.redhat.com/rhscl/php-56-rhel7:latest"
-- "registry.access.redhat.com/rhscl/php-70-rhel7:latest"
-- "registry.access.redhat.com/openshift3/python-33-rhel7:latest"
-- "registry.access.redhat.com/rhscl/python-27-rhel7:latest"
-- "registry.access.redhat.com/rhscl/python-34-rhel7:latest"
-- "registry.access.redhat.com/rhscl/python-35-rhel7:latest"
-- "registry.access.redhat.com/openshift3/mysql-55-rhel7:latest"
-- "registry.access.redhat.com/rhscl/mysql-56-rhel7:latest"
-- "registry.access.redhat.com/rhscl/mysql-57-rhel7:latest"
-- "registry.access.redhat.com/rhscl/mariadb-101-rhel7:latest"
-- "registry.access.redhat.com/openshift3/postgresql-92-rhel7:latest"
-- "registry.access.redhat.com/rhscl/postgresql-94-rhel7:latest"
-- "registry.access.redhat.com/rhscl/postgresql-95-rhel7:latest"
-- "registry.access.redhat.com/openshift3/mongodb-24-rhel7:latest"
-- "registry.access.redhat.com/rhscl/mongodb-26-rhel7:latest"
-- "registry.access.redhat.com/rhscl/mongodb-32-rhel7:latest"
-- "registry.access.redhat.com/rhscl/redis-32-rhel7:latest"
-- "registry.access.redhat.com/openshift3/jenkins-1-rhel7:latest"
-- "registry.access.redhat.com/openshift3/jenkins-2-rhel7:latest"
-- "registry.access.redhat.com/jboss-fuse-6/fis-java-openshift:latest"
-- "registry.access.redhat.com/jboss-fuse-6/fis-karaf-openshift:latest"
-- "registry.access.redhat.com/jboss-webserver-3/webserver30-tomcat7-openshift:latest"
-- "registry.access.redhat.com/jboss-webserver-3/webserver30-tomcat8-openshift:latest"
-- "registry.access.redhat.com/jboss-eap-6/eap64-openshift:latest"
-- "registry.access.redhat.com/jboss-eap-7/eap70-openshift:latest"
-- "registry.access.redhat.com/jboss-decisionserver-6/decisionserver62-openshift:latest"
-- "registry.access.redhat.com/jboss-decisionserver-6/decisionserver63-openshift:latest"
-- "registry.access.redhat.com/jboss-processserver-6/processserver63-openshift:latest"
-- "registry.access.redhat.com/jboss-datagrid-6/datagrid65-openshift:1.2"
-- "registry.access.redhat.com/jboss-datavirt-6/datavirt63-openshift:1.0"
-- "registry.access.redhat.com/jboss-amq-6/amq62-openshift:1.3"
-- "registry.access.redhat.com/redhat-sso-7/sso70-openshift:1.3"
+- { "name": "registry.access.redhat.com/cloudforms/cfme-openshift-app", "tag": "latest"}
+- { "name": "registry.access.redhat.com/cloudforms/cfme-openshift-memcached", "tag": "latest"}
+- { "name": "registry.access.redhat.com/cloudforms/cfme-openshift-postgresql", "tag": "latest"}
+- { "name": "registry.access.redhat.com/dotnet/dotnetcore-11-rhel7", "tag": "1.1"}
+- { "name": "registry.access.redhat.com/dotnet/dotnetcore-10-rhel7", "tag": "1.0"}
+- { "name": "registry.access.redhat.com/openshift3/ruby-20-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/ruby-22-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/ruby-23-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/nodejs-010-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/nodejs-4-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/perl-516-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/perl-520-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/perl-524-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/php-55-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/php-56-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/php-70-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/python-33-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/python-27-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/python-34-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/python-35-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/mysql-55-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/mysql-56-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/mysql-57-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/mariadb-101-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/postgresql-92-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/postgresql-94-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/postgresql-95-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/mongodb-24-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/mongodb-26-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/mongodb-32-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/rhscl/redis-32-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/jenkins-1-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/openshift3/jenkins-2-rhel7", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-fuse-6/fis-java-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-fuse-6/fis-karaf-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-webserver-3/webserver30-tomcat7-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-webserver-3/webserver30-tomcat8-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-eap-6/eap64-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-eap-7/eap70-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-decisionserver-6/decisionserver62-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-decisionserver-6/decisionserver63-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-processserver-6/processserver63-openshift", "tag": "latest"}
+- { "name": "registry.access.redhat.com/jboss-datagrid-6/datagrid65-openshift", "tag": "1.2"}
+- { "name": "registry.access.redhat.com/jboss-datavirt-6/datavirt63-openshift", "tag": "1.0"}
+- { "name": "registry.access.redhat.com/jboss-amq-6/amq62-openshift", "tag": "1.3"}
+- { "name": "registry.access.redhat.com/redhat-sso-7/sso70-openshift", "tag": "1.3"}
 

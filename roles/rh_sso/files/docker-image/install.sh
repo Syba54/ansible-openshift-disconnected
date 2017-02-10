@@ -55,7 +55,7 @@ chroot ${HOST} /usr/bin/docker create --name ${NAME} \
 # Install systemd unit file for running container
 sed -e "s/TEMPLATE/${NAME}/g" /etc/systemd/system/rhsso-db.service > ${HOST}/etc/systemd/system/${NAME}-db.service
 sed -e "s/TEMPLATE/${NAME}/g" /etc/systemd/system/rhsso.service    > ${HOST}/etc/systemd/system/${NAME}.service
-systenctl daemon-reload
+chroot ${HOST} systemctl daemon-reload
 
 # Enabled systemd unit file
 chroot ${HOST} /usr/bin/systemctl enable ${NAME}-db.service

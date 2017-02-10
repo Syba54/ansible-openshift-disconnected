@@ -1,0 +1,59 @@
+---
+- name: Setup Bastion
+  hosts: bastion
+  tasks:
+#- name: copy images
+#  copy:
+#    src: "{{ docker_repos_dir }}/{{ item }}.tar"
+#    dest: "/var/tmp/{{ item }}.tar"
+#  with_items:
+#  - base_images
+#  - component_images
+#  - s2i_images
+#  when: result|failed
+  
+
+- name: import images
+  raw: "curl -sSL http://{{ groups['bastion'][0] }}/{{ docker_repos }}/{{ item }}.tar |docker load"
+  with_items:
+  - registry_images
+  - base_images
+  - component_images
+  - s2i_images
+  when: containerized
+#  when: ansible_pkg_mgr == "unknown"
+#  when: result|failed
+
+#- name: cleanup temp files
+#  file:
+#    path: "/var/tmp/{{ item }}.tar"
+#    state: absent
+#  with_items:
+#  - base_images
+#  - component_images
+#  - s2i_images
+
+  - stat:
+      path: "{{ docker_repos_dir }}/{{ item }}.tar"
+    register: tarbal[item]
+    with_items:
+    - registry_images
+  - name: load images from tarbal
+    docker_image:
+      name: "{{ item }}"
+      repository: "{{ item | regex_replace('^[^/]*', groups['shared'][0] + ':5000') }}"
+      push: yes
+    when: tarbal[item].stat.exists
+    with_items:
+    - "{{ registry_images }}"
+
+- name: Setup Shared Services
+  hosts: shared
+  roles:
+  - atomic_registry
+
+- name: Setup Bastion
+  hosts: bastion
+  roles:
+  - docker
+

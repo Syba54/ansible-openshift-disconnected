@@ -7,6 +7,7 @@ chroot ${HOST} /usr/bin/systemctl stop    ${NAME}.service
 chroot ${HOST} /usr/bin/systemctl stop    ${NAME}-db.service
 chroot ${HOST} /usr/bin/systemctl disable ${NAME}.service
 chroot ${HOST} /usr/bin/systemctl disable ${NAME}-db.service
+chroot ${HOST} /usr/bin/systemctl daemon-reload
 
 rm -f ${HOST}/etc/systemd/system/${NAME}.service \
       ${HOST}/etc/systemd/system/${NAME}-db.service

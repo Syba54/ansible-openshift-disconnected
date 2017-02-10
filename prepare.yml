@@ -1,14 +1,14 @@
 ---
-- name: Setup Shared Services
-  hosts: shared
-  roles:
-  - atomic_registry
-  - rh_sso
+#- name: Setup Shared Services
+#  hosts: shared
+#  roles:
+#  - atomic_registry
+#  - rh_sso
 
 - name: Setup Bastion
   hosts: bastion
   roles:
-  - packages
+# - packages
   - docker
 # - httpd
 

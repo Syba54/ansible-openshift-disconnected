@@ -2,10 +2,18 @@
 subscription:
   username: False
   password: False
+  hostname: False
+  organization: False
+  activationkey: False
 docker_repos_dir: /var/www/html/docker-repo
 docker_repos: docker-repo
 rpm_repos_dir: /var/www/html/rpm-repo
 rpm_repos: rpm-repo
-ocp_version: 3.4
-ocp_tag: v3.4
+ocp_version: 3.3
+ocp_tag: v3.3
+registry_images:
+- "docker.io/projectatomic/atomic-registry-install:latest"
+- "docker.io/openshift/origin-docker-registry:latest"
+- "docker.io/openshift/origin:latest"
+- "docker.io/cockpit/kubernetes:latest"
 

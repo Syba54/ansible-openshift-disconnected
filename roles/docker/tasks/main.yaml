@@ -1,4 +1,11 @@
 ---
+- name: Install docker dependencies
+  yum:
+    name:
+    - docker
+#   - docker-python
+    state: installed
+
 - name: add our 'shared' docker-registry to 'bastion'
   lineinfile:
     name: /etc/sysconfig/docker
@@ -22,6 +29,7 @@
     return_content: yes
     force_basic_auth: yes
   register: authorize
+  ignore_errors: yes
 
 #- name: Get OAuth login token for docker-registry
 #  raw: "curl -sk 'https://{{ groups['shared'][0] }}:8443/oauth/authorize?response_type=token&client_id=openshift-challenging-client' --user admin:.  -I  | grep -oP 'access_token=[^&]*'"
@@ -30,6 +38,7 @@
 - debug: var=authorize
 - set_fact:
     oauth_token: "{{ authorize.url | regex_replace('.*access_token=([^&]*).*', '\\1') }}"
+  when: authorized is defined and authorized.url is defined
 - debug: var=oauth_token
 
 - name: Log into our 'shared' docker-registry
@@ -37,8 +46,10 @@
     registry: "{{ groups['shared'][0] }}:5000"
     username: admin
     password: "{{ oauth_token }}"
+  when: oauth_token is defined
 
-- stat:
+- name: Check existing saved images
+  stat:
     path: "{{ docker_repos_dir }}/{{ item }}.tar"
   register: tarbal[item]
   with_items:
@@ -48,7 +59,8 @@
 
 - name: load images from tarbal
   docker_image:
-    name: "{{ item }}"
+    name: "{{ item.name }}"
+    tag: "{{ item.tag }}"
     repository: "{{ item | regex_replace('^[^/]*', groups['shared'][0] + ':5000') }}"
     push: yes
   when: tarbal[item].stat.exists
@@ -60,10 +72,11 @@
 - name: pull images
   docker_image:
     name: "{{ item }}"
-    repository: "{{ item | regex_replace('^[^/]*', groups['shared'][0] + ':5000') }}"
-    push: yes
-  when: not tarbal[item].stat.exists
+#   repository: "{{ item | regex_replace('^[^/]*', groups['shared'][0] + ':5000') }}"
+#   push: yes
+# when: not tarbal[item].stat.exists
   with_items:
+  - "{{ registry_images }}"
   - "{{ base_images }}"
   - "{{ component_images }}"
   - "{{ s2i_images }}"
@@ -83,7 +96,7 @@
   - component_images
   - s2i_images
 
-- name: allow everyone to download images
+- name: allow everyone access to the images
   file: 
     path: "{{ docker_repos_dir }}/{{ item }}.tar"
     mode: 0644

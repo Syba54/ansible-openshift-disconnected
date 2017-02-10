@@ -1,8 +1,5 @@
-[ocp-stuff]
-ocp-stuff.openstack.local remote_user=root
-
 [bastion]
-ocp-stuff.openstack.local remote_user=root
+localhost ansible_connection=local
 
 [shared:vars]
 ansible_ssh_user=cloud-user
