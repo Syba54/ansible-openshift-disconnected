@@ -1,0 +1,26 @@
+{
+    "clusters": [
+        {
+            "nodes": [
+{% for node in groups["storage"] if 'gluster_disk' in hostvars[node]  %}
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "{{ node }}"
+                            ],
+                            "storage": [
+                                "{{ hostvars[node].ansible_default_ipv4.address }}"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        "{{ hostvars[node]['gluster_disk'] }}"
+                    ]
+                }{% if not loop.last %},{% endif %}
+{% endfor %}
+            ]
+        }
+    ]
+}

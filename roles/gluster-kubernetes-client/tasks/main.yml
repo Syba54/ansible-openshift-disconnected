@@ -1,0 +1,8 @@
+---
+- name: Add Dynamic Storage Provisioning StorageClass
+  command: "echo '{{ lookup('template', role_path + '/templates/storageclass.yml.j2') }}' |kubectl create -f -"
+# command: "/var/usrlocal/bin/oc create -f ./files/storageclass-gluster.yaml"
+
+- name:
+  include: docker-registry.yml
+  when: openshift_hosted_registry_storage_kind == "glusterfs"

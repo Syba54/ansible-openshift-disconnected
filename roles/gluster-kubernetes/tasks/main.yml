@@ -1,0 +1,46 @@
+---
+#- fail: msg="Variable 'gluster_disk' is not defined"
+#  when: gluster_disk is not defined
+
+- name: Allow firewall rules
+  lineinfile:
+    name: /etc/sysconfig/iptables
+    regexp: '^-A INPUT -p tcp -m state --state NEW {{ item }} -j ACCEPT$'
+    line: "-A INPUT -p tcp -m state --state NEW {{ item }} -j ACCEPT"
+    insertbefore: '^-A INPUT -j REJECT'
+  register: firewall
+  with_items:
+    - "-m tcp --dport 24007"
+    - "-m tcp --dport 24008"
+    - "-m tcp --dport 2222"
+    - "-m multiport --dports 49152:49664"
+
+- name: Reload iptables
+  service:
+    name: "{{ item }}"
+    state: reloaded
+  when: firewall.changed
+  with_items:
+    - iptables
+    - docker
+
+- name: Allow Privileged containers in Kubernetes
+  lineinfile:
+    name: /etc/kubernetes/config
+    regexp: '--allow-privileged'
+    line: "KUBE_ALLOW_PRIV='--allow-privileged=true'"
+  register: kubernetes
+
+- name: Reload kubernetes
+  service:
+    name: "{{ item }}"
+    state: reloaded
+  when: kubernetes.changed
+  ignore_errors: true
+  with_items:
+    - kube-apiserver
+    - kubelet
+
+- name: Setup Gluster Topology on Master node
+  include: master.yml
+  when: inventory_hostname == groups['storage'][0]

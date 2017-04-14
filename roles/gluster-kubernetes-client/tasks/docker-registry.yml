@@ -1,0 +1,22 @@
+---
+#- name: Create Gluster Volume for Docker-Registry
+#  command: >
+#     /var/usrlocal/bin/oc -n default rsh dc/heketi heketi-cli -s http://localhost:8080 \
+#       volume create --persistent-volume \
+#                     --persistent-volume-endpoint=glusterfs \
+#                     --size={{ openshift_hosted_registry_storage_volume_size }} \
+#    |/var/usr/local/bin/oc create -f -
+#  register: pv
+
+- name: Add Gluster Volume to Docker-Registry
+  command: >
+    /var/usrlocal/bin/oc -n default volume dc/docker-registry \
+      --add \
+      --overwrite  \
+      --name=registry-storage \
+      --mount-path=/registry \
+      --type=pvc \
+      --claim-name=docker-registry \
+      --claim-size={{ openshift_hosted_registry_storage_volume_size }}
+
+

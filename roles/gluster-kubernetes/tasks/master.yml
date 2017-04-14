@@ -1,0 +1,53 @@
+---
+#- name: Clone gluster-kubernetes git repo
+#  git:
+#    repo: "https://github.com/gluster/gluster-kubernetes.git"
+#    dest: "{{ checkout_dir }}"
+
+- name: Clone gluster-kubernetes git repo
+  copy:
+    src: "{{ role_path }}/files/deploy"
+    dest: "{{ checkout_dir }}"
+
+- name: Configure GlusterFS disk layout
+  template:
+    src: templates/topology.json.j2
+    dest: "{{ checkout_dir }}/deploy/topology.json"
+
+- name: Create storage project - OpenShift
+  command: 
+     /var/usrlocal/bin/oc adm new-project storage --node-selector=type=infra && \
+     /var/usrlocal/bin/oc project storage && \
+     /var/usrlocal/bin/oc adm policy add-scc-to-user privileged -z default
+  ignore_errors: true
+
+- name: Create storage project - Kubernetes
+  command: >
+     kubectl create namespace storage
+  ignore_errors: true
+
+- name: Install Heketi-Client
+  package: 
+    name: heketi-client
+    state: latest
+  when: ansible_pkg_mgr == "yum"
+
+- name: Install Heketi-cli script
+  copy:
+    src: "{{ role_path }}/files/heketi-cli.sh"
+    dest: /var/usrlocal/sbin/heketi-cli
+    mode: a+rX
+
+- name: Install GlusterFS containers
+  environment:
+    PATH: /usr/local/sbin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin
+  command: /bin/bash ./gk-deploy -gy -n storage -l /var/log/gk-deploy.log /root/git/gluster-kubernetes/deploy/topology.json
+  args:
+    chdir: "{{ checkout_dir }}/deploy/"
+    
+- name: Add repository
+  yum_repository:
+    name: epel
+    description: Fedora EPEL
+    baseurl: ftp://ftp.pbone.net/mirror/download.fedora.redhat.com/pub/fedora/epel/$releasever/$basearch/
+  when: ansible_pkg_mgr == "yum"
