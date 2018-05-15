@@ -1,16 +1,16 @@
 ---
-- name: Install katello-ca-consumer package
-  yum:
-    name: "https://{{ subscription.hostname }}/pub/katello-ca-consumer-latest.no.arch.rpm"
-    state: installed
+#- name: Install katello-ca-consumer package
+#  yum:
+#    name: "https://{{ subscription.hostname }}/pub/katello-ca-consumer-latest.no.arch.rpm"
+#    state: installed
 
 - name: Register System with Red Hat
   redhat_subscription:
     state: present
     username: "{{ subscription.username }}"
     password: "{{ subscription.password }}"
-    activationkey: "{{ subscription.activationkey }}"
-    org_id: "{{ subscription.organization }}"
+ #   activationkey: "{{ subscription.activationkey }}"
+ #   org_id: "{{ subscription.organization }}"
     pool: '.*OpenShift.*'
   when: subscription.username | bool
 
