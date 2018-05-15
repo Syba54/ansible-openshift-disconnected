@@ -8,7 +8,7 @@
 - name: Setup Bastion
   hosts: bastion
   roles:
-# - packages
-  - docker
-# - httpd
+  - packages
+# - docker
+  - httpd
 
