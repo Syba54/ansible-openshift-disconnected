@@ -9,8 +9,8 @@ docker_repos_dir: /var/www/html/docker-repo
 docker_repos: docker-repo
 rpm_repos_dir: /var/www/html/rpm-repo
 rpm_repos: rpm-repo
-ocp_version: 3.3
-ocp_tag: v3.3
+ocp_version: 3.9
+ocp_tag: v3.9
 registry_images:
 - "docker.io/projectatomic/atomic-registry-install:latest"
 - "docker.io/openshift/origin-docker-registry:latest"
