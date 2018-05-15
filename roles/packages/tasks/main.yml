@@ -9,6 +9,10 @@
     state: present
     username: "{{ subscription.username }}"
     password: "{{ subscription.password }}"
+    server_proxy_hostname: "{{ proxy.hostname }}"
+    server_proxy_port: "{{ proxy.port }}"
+    server_proxy_user: "{{ proxy.username }}"
+    server_proxy_password: "{{ proxy.password }}"
  #   activationkey: "{{ subscription.activationkey }}"
  #   org_id: "{{ subscription.organization }}"
     pool: '.*OpenShift.*'
