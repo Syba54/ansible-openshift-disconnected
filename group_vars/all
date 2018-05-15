@@ -5,6 +5,11 @@ subscription:
   hostname: False
   organization: False
   activationkey: False
+proxy:
+  hostname: False
+  port: False
+  username: False
+  password: False
 docker_repos_dir: /var/www/html/docker-repo
 docker_repos: docker-repo
 rpm_repos_dir: /var/www/html/rpm-repo
