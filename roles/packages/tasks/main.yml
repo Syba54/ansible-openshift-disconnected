@@ -44,3 +44,12 @@
   args:
     creates: "{{ rpm_repos_dir }}/{{ item }}"
   with_items: "{{ repos.rhel }}"
+
+
+- name: cron schedule repo updates
+  cron: 
+    name: "reposync {{ item }}"
+    job: "reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ rpm_repos_dir }}; createrepo -v {{ rpm_repos_dir }}/{{ item }} -o {{ rpm_repos_dir }}/{{ item }}"
+    hour: 0
+    minute: 0
+  with_items: "{{ repos.rhel }}"
