@@ -49,7 +49,7 @@
 - name: cron schedule repo updates
   cron: 
     name: "reposync {{ item }}"
-    job: "reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ rpm_repos_dir }}; createrepo -v {{ rpm_repos_dir }}/{{ item }} -o {{ rpm_repos_dir }}/{{ item }}"
+    job: "/usr/bin/reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ rpm_repos_dir }}; createrepo -v {{ rpm_repos_dir }}/{{ item }} -o {{ rpm_repos_dir }}/{{ item }} >>/var/log/reposync.log 2>&1"
     hour: 0
     minute: 0
   with_items: "{{ repos.rhel }}"
